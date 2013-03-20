@@ -5,6 +5,10 @@ desktop_video=$3
 final_output=$4
 fps="29.97"
 
+if [ $# -ne 4 ]; then
+    echo "usage: `basename $0` first_videofile last_videofile desktop_videofile {720p | 1080p}"
+    exit 1
+fi
 
 echo
 echo "Extracting Audio from Desktop, First, & Last Instructor Video"
@@ -43,6 +47,10 @@ case $desk_res in
                 ffmpeg -v panic -i $desktop_video -ss $desk_start_time -r 29.97 -vf "crop=1201:899:120:0,scale=1024:768" \
 				-c:v libx264 -preset ultrafast -an desktop-final.mp4
                 ;;
+    "1400x1050") echo "Scaling from 1400x1050 and converting to 29.97 fps..."
+                 ffmpeg -v panic -i $desktop_video -ss $desk_start_time -r 29.97 -vf "scale=1024:768" \
+				 -c:v libx264 -preset ultrafast -an desktop-final.mp4
+                 ;;
 	*) echo "Unsupported desktop video resolution ($desk_res)!"; exit;;
 esac
 
